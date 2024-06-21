@@ -317,16 +317,22 @@ namespace DSPRE {
             //throw new NotImplementedException();
         }
 
-        public void CheckExpandedTrainerNamesPatchApplied() {
-            if (flag_TrainerNamesExpanded) {
+        public void CheckExpandedTrainerNamesPatchApplied()
+        {
+            if (flag_TrainerNamesExpanded)
+            {
                 DisableTrainerNameExpansionPatch("Already\nApplied");
-            } else {
-                if (RomInfo.trainerNameLenOffset < 0 ) {
+            }
+            else
+            {
+                if (RomInfo.trainerNameLenOffset < 0)
+                {
                     DisableTrainerNameExpansionPatch("Unsupported");
-                } else {
-                    int v = RomInfo.SetTrainerNameMaxLen();
-
-                    if (v > TrainerFile.defaultNameLen+1) { 
+                }
+                else
+                {
+                    if (RomInfo.trainerNameMaxLen > TrainerFile.defaultNameLen)
+                    {
                         DisableTrainerNameExpansionPatch("Already\nApplied");
                         PatchToolboxDialog.flag_TrainerNamesExpanded = true;
                     }

@@ -78,7 +78,7 @@ namespace DSPRE {
         public static int moveNamesTextNumbers { get; private set; }
         public static int locationNamesTextNumber { get; private set; }
         public static int trainerNameLenOffset { get; private set; }
-        public static int trainerNameMaxLen { get; private set; }
+        public static int trainerNameMaxLen => SetTrainerNameMaxLen();
         public static int trainerFunnyScriptNumber { get; private set; }
 
         public static string internalNamesLocation { get; private set; }
@@ -1005,15 +1005,18 @@ namespace DSPRE {
             }
         }
 
-        public static int SetTrainerNameMaxLen() {
-            if(trainerNameLenOffset < 0) {
-                trainerNameMaxLen = TrainerFile.defaultNameLen;
-            } else {
-                using (ARM9.Reader ar = new ARM9.Reader(trainerNameLenOffset)) {
-                    trainerNameMaxLen = ar.ReadByte();
+        public static int SetTrainerNameMaxLen()
+        {
+            int maxLength = TrainerFile.defaultNameLen;
+            if (trainerNameLenOffset > 0)
+            {
+                using (ARM9.Reader ar = new ARM9.Reader(trainerNameLenOffset))
+                {
+                    maxLength = ar.ReadByte();
                 }
+                maxLength += ((maxLength - 4) / 2);
             }
-            return trainerNameMaxLen;
+            return maxLength;
         }
 
         public string GetBuildingModelsDirPath(bool interior) => interior ? gameDirs[DirNames.interiorBuildingModels].unpackedDir : gameDirs[DirNames.exteriorBuildingModels].unpackedDir;
