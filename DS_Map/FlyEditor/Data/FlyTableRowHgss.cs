@@ -8,18 +8,6 @@ namespace DSPRE.Editors.Data
 {
     public class FlyTableRowHgss
     {
-        public ushort HeaderIdGameOver { get; set; }    
-        public byte LocalX { get; set; }              
-        public byte LocalY { get; set; }                 
-        public ushort HeaderIdFly { get; set; }          
-        public ushort GlobalX { get; set; }        
-        public ushort GlobalY { get; set; }              
-        public ushort HeaderIdUnlockWarp { get; set; } 
-        public ushort GlobalXUnlock { get; set; }     
-        public ushort GlobalYUnlock { get; set; }      
-        public byte UnlockId { get; set; }                
-        public byte WarpCondition { get; set; }         
-
         public FlyTableRowHgss() { }
 
         public FlyTableRowHgss(ushort headerIdGameOver, byte localX, byte localY, ushort headerIdFly, ushort globalX, ushort globalY,
@@ -37,6 +25,18 @@ namespace DSPRE.Editors.Data
             UnlockId = unlockId;
             WarpCondition = warpCondition;
         }
+
+        public ushort GlobalX { get; set; }
+        public ushort GlobalXUnlock { get; set; }
+        public ushort GlobalY { get; set; }
+        public ushort GlobalYUnlock { get; set; }
+        public ushort HeaderIdFly { get; set; }
+        public ushort HeaderIdGameOver { get; set; }
+        public ushort HeaderIdUnlockWarp { get; set; }
+        public byte LocalX { get; set; }
+        public byte LocalY { get; set; }                 
+        public byte UnlockId { get; set; }                
+        public byte WarpCondition { get; set; }         
     }
 
 }

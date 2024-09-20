@@ -8,16 +8,6 @@ namespace DSPRE.Editors.Data
 {
     public class FlyTableRowDpPlat
     {
-        public ushort HeaderIdGameOver { get; set; }       
-        public ushort LocalX { get; set; }                
-        public ushort LocalY { get; set; }                 
-        public ushort HeaderIdFly { get; set; }            
-        public ushort GlobalX { get; set; }               
-        public ushort GlobalY { get; set; }            
-        public byte IsTeleportPos { get; set; }         
-        public byte UnlockOnMapEntry { get; set; }         
-        public ushort UnlockId { get; set; }               
-
         public FlyTableRowDpPlat() { }
 
         public FlyTableRowDpPlat(ushort headerIdGameOver, ushort localX, ushort localY, ushort headerIdFly, ushort globalX, ushort globalY,
@@ -33,6 +23,16 @@ namespace DSPRE.Editors.Data
             UnlockOnMapEntry = unlockOnMapEntry;
             UnlockId = unlockId;
         }
+
+        public ushort GlobalX { get; set; }
+        public ushort GlobalY { get; set; }
+        public ushort HeaderIdFly { get; set; }
+        public ushort HeaderIdGameOver { get; set; }
+        public byte IsTeleportPos { get; set; }
+        public ushort LocalX { get; set; }
+        public ushort LocalY { get; set; }
+        public ushort UnlockId { get; set; }
+        public byte UnlockOnMapEntry { get; set; }
     }
 
 }
