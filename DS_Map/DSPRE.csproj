@@ -116,6 +116,14 @@
     <Compile Include="Editors\EncountersEditor.Designer.cs">
       <DependentUpon>EncountersEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="FlyEditor\Data\FlyTableRowDpPlat.cs" />
+    <Compile Include="FlyEditor\Data\FlyTableRowHgss.cs" />
+    <Compile Include="FlyEditor\FlyEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FlyEditor\FlyEditor.Designer.cs">
+      <DependentUpon>FlyEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\HeadbuttEncounterEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -378,6 +386,9 @@
     <EmbeddedResource Include="DVCalculator\DVCalcNatureViewerForm.resx" />
     <EmbeddedResource Include="Editors\EncountersEditor.resx">
       <DependentUpon>EncountersEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FlyEditor\FlyEditor.resx">
+      <DependentUpon>FlyEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\HeadbuttEncounterEditor.resx">
       <DependentUpon>HeadbuttEncounterEditor.cs</DependentUpon>
@@ -734,5 +745,6 @@
       <Version>4.3.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
