@@ -1,12 +1,7 @@
 ﻿using DSPRE.Editors.Data;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static DSPRE.RomInfo;
@@ -31,7 +26,6 @@ namespace DSPRE.Editors
 
         public FlyEditor(GameFamilies gameFamily, List<string> headers)
         {
-            this.FormClosing += FlyEditor_FormClosing;
             GameFamily = gameFamily;
             Headers = headers;
             TableDataHgss = new List<FlyTableRowHgss>();
@@ -103,48 +97,43 @@ namespace DSPRE.Editors
 
             try
             {
-                using (FileStream fs = new FileStream(RomInfo.arm9Path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true))
+                using (ARM9.Reader reader = new ARM9.Reader(FlyTableOffset))
                 {
-                    using (BinaryReader reader = new BinaryReader(fs))
+                    for (int i = 0; i < TableSize; i++)
                     {
-                        fs.Seek(FlyTableOffset, SeekOrigin.Begin);
-
-                        for (int i = 0; i < TableSize; i++)
+                        if (GameFamily == GameFamilies.HGSS)
                         {
-                            if (GameFamily == GameFamilies.HGSS)
+                            FlyTableRowHgss row = new FlyTableRowHgss
                             {
-                                FlyTableRowHgss row = new FlyTableRowHgss
-                                {
-                                    HeaderIdGameOver = await ReadUInt16Async(reader),
-                                    LocalX = await ReadByteAsync(reader),
-                                    LocalY = await ReadByteAsync(reader),
-                                    HeaderIdFly = await ReadUInt16Async(reader),
-                                    GlobalX = await ReadUInt16Async(reader),
-                                    GlobalY = await ReadUInt16Async(reader),
-                                    HeaderIdUnlockWarp = await ReadUInt16Async(reader),
-                                    GlobalXUnlock = await ReadUInt16Async(reader),
-                                    GlobalYUnlock = await ReadUInt16Async(reader),
-                                    UnlockId = await ReadByteAsync(reader),
-                                    WarpCondition = await ReadByteAsync(reader)
-                                };
-                                TableDataHgss.Add(row);
-                            }
-                            else if (GameFamily == GameFamilies.DP || GameFamily == GameFamilies.Plat)
+                                HeaderIdGameOver = await ReadUInt16Async(reader),
+                                LocalX = await ReadByteAsync(reader),
+                                LocalY = await ReadByteAsync(reader),
+                                HeaderIdFly = await ReadUInt16Async(reader),
+                                GlobalX = await ReadUInt16Async(reader),
+                                GlobalY = await ReadUInt16Async(reader),
+                                HeaderIdUnlockWarp = await ReadUInt16Async(reader),
+                                GlobalXUnlock = await ReadUInt16Async(reader),
+                                GlobalYUnlock = await ReadUInt16Async(reader),
+                                UnlockId = await ReadByteAsync(reader),
+                                WarpCondition = await ReadByteAsync(reader)
+                            };
+                            TableDataHgss.Add(row);
+                        }
+                        else if (GameFamily == GameFamilies.DP || GameFamily == GameFamilies.Plat)
+                        {
+                            FlyTableRowDpPlat row = new FlyTableRowDpPlat
                             {
-                                FlyTableRowDpPlat row = new FlyTableRowDpPlat
-                                {
-                                    HeaderIdGameOver = await ReadUInt16Async(reader),
-                                    LocalX = await ReadUInt16Async(reader),
-                                    LocalY = await ReadUInt16Async(reader),
-                                    HeaderIdFly = await ReadUInt16Async(reader),
-                                    GlobalX = await ReadUInt16Async(reader),
-                                    GlobalY = await ReadUInt16Async(reader),
-                                    IsTeleportPos = await ReadByteAsync(reader),
-                                    UnlockOnMapEntry = await ReadByteAsync(reader),
-                                    UnlockId = await ReadUInt16Async(reader)
-                                };
-                                TableDataDpPlat.Add(row);
-                            }
+                                HeaderIdGameOver = await ReadUInt16Async(reader),
+                                LocalX = await ReadUInt16Async(reader),
+                                LocalY = await ReadUInt16Async(reader),
+                                HeaderIdFly = await ReadUInt16Async(reader),
+                                GlobalX = await ReadUInt16Async(reader),
+                                GlobalY = await ReadUInt16Async(reader),
+                                IsTeleportPos = await ReadByteAsync(reader),
+                                UnlockOnMapEntry = await ReadByteAsync(reader),
+                                UnlockId = await ReadUInt16Async(reader)
+                            };
+                            TableDataDpPlat.Add(row);
                         }
                     }
                 }
@@ -252,13 +241,12 @@ namespace DSPRE.Editors
         {
             bool hasInvalidCells = false;
 
-            // Validate every non-combo box cell in dt_GameOverWarps
             foreach (DataGridViewRow row in dt_GameOverWarps.Rows)
             {
                 foreach (DataGridViewCell cell in row.Cells)
                 {
-                    // Skip validation for ComboBox cells
-                    if (!(dt_GameOverWarps.Columns[cell.ColumnIndex] is DataGridViewComboBoxColumn))
+                    if (!(dt_GameOverWarps.Columns[cell.ColumnIndex] is DataGridViewComboBoxColumn) &&
+                        !(dt_GameOverWarps.Columns[cell.ColumnIndex] is DataGridViewCheckBoxColumn))
                     {
                         if (!ValidateCell(cell))
                         {
@@ -269,13 +257,12 @@ namespace DSPRE.Editors
                 }
             }
 
-            // Validate every non-combo box cell in dt_FlyWarps
             foreach (DataGridViewRow row in dt_FlyWarps.Rows)
             {
                 foreach (DataGridViewCell cell in row.Cells)
                 {
-                    // Skip validation for ComboBox cells
-                    if (!(dt_FlyWarps.Columns[cell.ColumnIndex] is DataGridViewComboBoxColumn))
+                    if (!(dt_FlyWarps.Columns[cell.ColumnIndex] is DataGridViewComboBoxColumn) &&
+                         !(dt_FlyWarps.Columns[cell.ColumnIndex] is DataGridViewCheckBoxColumn))
                     {
                         if (!ValidateCell(cell))
                         {
@@ -286,13 +273,12 @@ namespace DSPRE.Editors
                 }
             }
 
-            // Validate every non-combo box cell in dt_UnlockSettings
             foreach (DataGridViewRow row in dt_UnlockSettings.Rows)
             {
                 foreach (DataGridViewCell cell in row.Cells)
                 {
-                    // Skip validation for ComboBox cells
-                    if (!(dt_UnlockSettings.Columns[cell.ColumnIndex] is DataGridViewComboBoxColumn))
+                    if (!(dt_UnlockSettings.Columns[cell.ColumnIndex] is DataGridViewComboBoxColumn) &&
+                             !(dt_UnlockSettings.Columns[cell.ColumnIndex] is DataGridViewCheckBoxColumn))
                     {
                         if (!ValidateCell(cell))
                         {
@@ -303,11 +289,18 @@ namespace DSPRE.Editors
                 }
             }
 
-            // If no invalid cells, proceed with saving
             if (!hasInvalidCells)
             {
-                // Save logic goes here
-                MessageBox.Show("Data is valid, proceeding with save...");
+                try
+                {
+                    WriteFlyTable();
+                    MessageBox.Show("Table data updated!", "Success", MessageBoxButtons.OK);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Unable to Save", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
             else
             {
@@ -315,44 +308,92 @@ namespace DSPRE.Editors
             }
         }
 
-        private void DataGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            DataGridView dgv = sender as DataGridView;
-
-            if (dgv.Columns[e.ColumnIndex] is DataGridViewComboBoxColumn)
-            {
-                return;
-            }
-
-            if (dgv.IsCurrentCellDirty)
-            {
-                string cellValue = e.FormattedValue.ToString();
-
-                if (!IsValidNumericInput(cellValue))
-                {
-                    MessageBox.Show("Invalid input! Please enter a numeric value.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    btn_SaveChanges.Enabled = false;
-
-                    e.Cancel = true;
-                }
-                else
-                {
-                    btn_SaveChanges.Enabled = true;
-                }
-            }
-        }
-
-        private void FlyEditor_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            isFormClosing = true;
-            e.Cancel = false;
-        }
-
         private bool IsValidNumericInput(string input)
         {
-            // Check if the input is a valid integer or decimal number
             return decimal.TryParse(input, out _);
+        }
+
+        private void WriteFlyTable()
+        {
+            dt_GameOverWarps.EndEdit();
+            dt_FlyWarps.EndEdit();
+            dt_UnlockSettings.EndEdit();
+
+            using (ARM9.Writer writer = new ARM9.Writer(FlyTableOffset))
+            {
+                for (int i = 0; i < TableSize; i++)
+                {
+                    if (GameFamily == GameFamilies.HGSS)
+                    {
+                        DataGridViewComboBoxCell comboBoxCell = (DataGridViewComboBoxCell)dt_GameOverWarps.Rows[i].Cells[0];
+                        ushort gameOverHeaderId = (ushort)comboBoxCell.Items.IndexOf(comboBoxCell.Value);
+                        writer.Write(gameOverHeaderId);
+
+                        byte localX = Convert.ToByte(dt_GameOverWarps.Rows[i].Cells[1].Value);
+                        writer.Write(localX);
+
+                        byte localY = Convert.ToByte(dt_GameOverWarps.Rows[i].Cells[2].Value);
+                        writer.Write(localY);
+
+                        DataGridViewComboBoxCell comboBoxCellFly = (DataGridViewComboBoxCell)dt_FlyWarps.Rows[i].Cells[0];
+                        ushort flyHeaderId = (ushort)comboBoxCellFly.Items.IndexOf(comboBoxCellFly.Value);
+                        writer.Write(flyHeaderId);
+
+                        ushort globalX = (ushort)dt_FlyWarps.Rows[i].Cells[1].Value;
+                        writer.Write(globalX);
+
+                        ushort globalY = (ushort)dt_FlyWarps.Rows[i].Cells[2].Value;
+                        writer.Write(globalY);
+
+                        DataGridViewComboBoxCell comboBoxCellUnlock = (DataGridViewComboBoxCell)dt_UnlockSettings.Rows[i].Cells[0];
+                        ushort unlockHeaderId = (ushort)comboBoxCellUnlock.Items.IndexOf(comboBoxCellUnlock.Value);
+                        writer.Write(unlockHeaderId);
+
+                        ushort unlockGlobalX = (ushort)dt_UnlockSettings.Rows[i].Cells[1].Value;
+                        writer.Write(unlockGlobalX);
+
+                        ushort unlockGlobalY = (ushort)dt_UnlockSettings.Rows[i].Cells[2].Value;
+                        writer.Write(unlockGlobalY);
+
+                        byte unlockId = Convert.ToByte(dt_UnlockSettings.Rows[i].Cells[3].Value);
+                        writer.Write(unlockId);
+
+                        byte warpCondition = Convert.ToByte(dt_UnlockSettings.Rows[i].Cells[4].Value);
+                        writer.Write(warpCondition);
+                    }
+                    else if (GameFamily == GameFamilies.DP || GameFamily == GameFamilies.Plat)
+                    {
+                        DataGridViewComboBoxCell comboBoxCellGameOver = (DataGridViewComboBoxCell)dt_GameOverWarps.Rows[i].Cells[0];
+                        ushort gameOverHeaderId = (ushort)comboBoxCellGameOver.Items.IndexOf(comboBoxCellGameOver.Value);
+                        writer.Write(gameOverHeaderId);
+
+                        ushort localX = (ushort)dt_GameOverWarps.Rows[i].Cells[1].Value;
+                        writer.Write(localX);
+
+                        ushort localY = (ushort)dt_GameOverWarps.Rows[i].Cells[2].Value;
+                        writer.Write(localY);
+
+                        DataGridViewComboBoxCell comboBoxCellFly = (DataGridViewComboBoxCell)dt_FlyWarps.Rows[i].Cells[0];
+                        ushort flyHeaderId = (ushort)comboBoxCellFly.Items.IndexOf(comboBoxCellFly.Value);
+                        writer.Write(flyHeaderId);
+
+                        ushort globalX = (ushort)dt_FlyWarps.Rows[i].Cells[1].Value;
+                        writer.Write(globalX);
+
+                        ushort globalY = (ushort)dt_FlyWarps.Rows[i].Cells[2].Value;
+                        writer.Write(globalY);
+
+                        bool isTeleportPos = (bool)dt_UnlockSettings.Rows[i].Cells[0].Value;
+                        writer.Write(isTeleportPos ? (byte)1 : (byte)0);
+
+                        bool autoUnlock = (bool)dt_UnlockSettings.Rows[i].Cells[1].Value;
+                        writer.Write(autoUnlock ? (byte)1 : (byte)0); // Write AutoUnlock as byte (false = 0, true = 1)
+
+                        ushort unlockId = (ushort)dt_UnlockSettings.Rows[i].Cells[2].Value;
+                        writer.Write(unlockId); // Write Unlock ID as ushort
+                    }
+                }
+            }
         }
 
         private void PopulateColumns()
@@ -369,49 +410,95 @@ namespace DSPRE.Editors
             dt_FlyWarps.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dt_UnlockSettings.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            dt_GameOverWarps.ShowRowErrors = true;
-            dt_FlyWarps.ShowRowErrors = true;
-            dt_UnlockSettings.ShowRowErrors = true;
-
-            dt_GameOverWarps.CellValidating += DataGridView_CellValidating;
-            dt_FlyWarps.CellValidating += DataGridView_CellValidating;
-            dt_UnlockSettings.CellValidating += DataGridView_CellValidating;
-
             if (GameFamily == GameFamilies.HGSS)
             {
                 AddComboBoxColumn(dt_GameOverWarps, "headerIdGameOver", "Header ID (GameOver)", Headers);
                 AddComboBoxColumn(dt_FlyWarps, "headerIdFly", "Header ID (Fly)", Headers);
                 AddComboBoxColumn(dt_UnlockSettings, "headerIdUnlock", "Header ID (Unlock)", Headers);
 
-                dt_GameOverWarps.Columns.Add("localX", "Local X");
-                dt_GameOverWarps.Columns.Add("localY", "Local Y");
+                dt_GameOverWarps.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "localX",
+                    HeaderText = "Local X",
+                    ValueType = typeof(ushort)
+                });
+                dt_GameOverWarps.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "localY",
+                    HeaderText = "Local Y",
+                    ValueType = typeof(ushort)
+                });
 
-                dt_FlyWarps.Columns.Add("globalX", "Global X");
-                dt_FlyWarps.Columns.Add("globalY", "Global Y");
+                dt_FlyWarps.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "globalX",
+                    HeaderText = "Global X",
+                    ValueType = typeof(ushort)
+                });
+                dt_FlyWarps.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "globalY",
+                    HeaderText = "Global Y",
+                    ValueType = typeof(ushort)
+                });
 
-                dt_UnlockSettings.Columns.Add("globalXUnlock", "Global X");
-                dt_UnlockSettings.Columns.Add("globalYUnlock", "Global Y");
-                dt_UnlockSettings.Columns.Add("unlockId", "Unlock ID");
+                dt_UnlockSettings.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "globalXUnlock",
+                    HeaderText = "Global X",
+                    ValueType = typeof(ushort)
+                });
+                dt_UnlockSettings.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "globalYUnlock",
+                    HeaderText = "Global Y",
+                    ValueType = typeof(ushort)
+                });
+                dt_UnlockSettings.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "unlockId",
+                    HeaderText = "Unlock ID",
+                    ValueType = typeof(byte)
+                });
 
                 DataGridViewComboBoxColumn warpConditionColumn = new DataGridViewComboBoxColumn
                 {
                     Name = "warpCondition",
                     HeaderText = "Warp Condition"
                 };
-                warpConditionColumn.Items.AddRange(0, 1, 2, 3);  // Add values 0-3
-                warpConditionColumn.ValueType = typeof(int);
+                warpConditionColumn.Items.AddRange(0, 1, 2, 3);
+                warpConditionColumn.ValueType = typeof(byte);
                 dt_UnlockSettings.Columns.Add(warpConditionColumn);
             }
             else if (GameFamily == GameFamilies.DP || GameFamily == GameFamilies.Plat)
             {
                 AddComboBoxColumn(dt_GameOverWarps, "headerIdGameOver", "Header ID (GameOver)", Headers);
                 AddComboBoxColumn(dt_FlyWarps, "headerIdFly", "Header ID (Fly)", Headers);
+                dt_GameOverWarps.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "localX",
+                    HeaderText = "Local X",
+                    ValueType = typeof(ushort)
+                });
+                dt_GameOverWarps.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "localY",
+                    HeaderText = "Local Y",
+                    ValueType = typeof(ushort)
+                });
 
-                dt_GameOverWarps.Columns.Add("localX", "Local X");
-                dt_GameOverWarps.Columns.Add("localY", "Local Y");
-
-                dt_FlyWarps.Columns.Add("globalX", "Global X");
-                dt_FlyWarps.Columns.Add("globalY", "Global Y");
+                dt_FlyWarps.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "globalX",
+                    HeaderText = "Global X",
+                    ValueType = typeof(ushort)
+                });
+                dt_FlyWarps.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "globalY",
+                    HeaderText = "Global Y",
+                    ValueType = typeof(ushort)
+                });
 
                 DataGridViewCheckBoxColumn isTeleportPosColumn = new DataGridViewCheckBoxColumn
                 {
@@ -427,7 +514,12 @@ namespace DSPRE.Editors
                 };
                 dt_UnlockSettings.Columns.Add(autoUnlockColumn);
 
-                dt_UnlockSettings.Columns.Add("unlockId", "Unlock ID");
+                dt_UnlockSettings.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "unlockId",
+                    HeaderText = "Unlock ID",
+                    ValueType = typeof(ushort)
+                });
             }
         }
 
@@ -445,21 +537,17 @@ namespace DSPRE.Editors
             return BitConverter.ToUInt16(buffer, 0);
         }
 
-        // Helper method to validate a cell
         private bool ValidateCell(DataGridViewCell cell)
         {
-            // Trigger the same logic as CellValidating
             string cellValue = cell.EditedFormattedValue.ToString();
 
             if (string.IsNullOrWhiteSpace(cellValue) || !IsValidNumericInput(cellValue))
             {
-                // Invalid input
                 cell.ErrorText = "Only numeric values are allowed";
                 return false;
             }
             else
             {
-                // Clear error if input is valid
                 cell.ErrorText = string.Empty;
                 return true;
             }
