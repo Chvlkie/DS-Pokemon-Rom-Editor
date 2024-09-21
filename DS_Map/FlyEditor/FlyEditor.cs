@@ -384,7 +384,7 @@ namespace DSPRE.Editors
                     HeaderText = "Warp Condition"
                 };
                 warpConditionColumn.Items.AddRange(0, 1, 2, 3);
-                warpConditionColumn.ValueType = typeof(byte);
+                warpConditionColumn.ValueType = typeof(int);
                 dt_UnlockSettings.Columns.Add(warpConditionColumn);
             }
             else if (GameFamily == GameFamilies.DP || GameFamily == GameFamilies.Plat)
