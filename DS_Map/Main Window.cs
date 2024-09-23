@@ -9914,5 +9914,11 @@ namespace DSPRE {
             Helpers.statusLabelMessage();
             Update();
         }
+
+        private void flyEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var flyEditor = new FlyEditor(gameFamily, headerListBoxNames);
+            flyEditor.Show();
+        }
     }
 }
