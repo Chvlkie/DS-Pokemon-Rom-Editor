@@ -153,6 +153,20 @@ namespace DSPRE.Resources {
             [0x0065] = "WaitJumpSite",
             [0x0067] = "WaitDoubleExclamation",
             [0x0068] = "WaitMoveForever",
+            [0x009e] = "Heart",
+            [0x009f] = "Smile",
+            [0x00A0] = "Anger",
+            [0x00A1] = "Sad",
+            [0x00A2] = "Grin",
+            [0x00A3] = "Suspecting",
+            [0x00A4] = "MusicNote",
+            [0x00A5] = "Question",
+            [0x00A6] = "BigExclamation",
+            [0x00A7] = "Water",
+            [0x00A8] = "Exhaust",
+            [0x00A9] = "Poison",
+            [0x00AA] = "Ellipsis",
+            [0x00AB] = "Asleep",
             [0x00FE] = "End"
         };
 
@@ -247,7 +261,7 @@ namespace DSPRE.Resources {
             [0x0053] = "SetMusic",
             [0x0054] = "FadeOutMusic",
             [0x0055] = "FadeInMusic",
-
+            [0x0056] = "SetMusicPauseStatus",
             [0x0057] = "PlayFieldBGM",
 
             [0x0059] = "CheckChatotCry",
@@ -287,7 +301,7 @@ namespace DSPRE.Resources {
             [0x007B] = "GiveItem",
             [0x007C] = "TakeItem",
             [0x007D] = "CheckItemSpace",
-            [0x007E] = "CheckPlayerHasItem",
+            [0x007E] = "CheckItem",
             [0x007F] = "CheckItemIsMachine",
             [0x0080] = "GetItemPocket",
             [0x0081] = "DummyGivePCItem",
@@ -544,6 +558,8 @@ namespace DSPRE.Resources {
             [0x01CA] = "GetPartyPokemonMove",
             [0x01CB] = "TextPartyPokemonMove",
 
+            [0x01CD] = "CreateJournalData",
+
             [0x01CF] = "Strength",
             [0x01D0] = "Flash",
             [0x01D1] = "Defog",
@@ -559,10 +575,14 @@ namespace DSPRE.Resources {
             [0x01F5] = "CheckFossil",
             [0x01F6] = "CountPokemonUnderLevel",
             [0x01F7] = "SurvivePoison",
+            [0x01F8] = "FinishOverworldScreen",
+            [0x01F9] = "DummyGetVar",
+            [0x01FA] = "MessageAllFromArchive",
+            [0x01FB] = "MessageFromArchive",
 
             [0x0200] = "GetPreviousHeaderID",
             [0x0201] = "GetCurrentHeaderID",
-
+            [0x0202] = "SetSafariFlag",
             [0x0203] = "BattleRoomWarp",
             [0x0204] = "ExitBattleRoom",
             [0x0205] = "GeonetScreen",
@@ -678,9 +698,16 @@ namespace DSPRE.Resources {
 
             [0x02C1] = "ShowSaveBox",
             [0x02C2] = "HideSaveBox",
-            [0x02C3] = "ScopeMode",
+            [0x02C3] = "ScopeMode",            
 
             [0x0333] = "SetFieldVolume",
+
+            [0x0360] = "CollisionZone",  // Command by AdAstra, big collision zone
+            [0x035D] = "SpawnBuilding", // Command by AdAstra, add building to the map
+            [0x035E] = "DeleteBuilding", // Remove previously added building
+            [0x035F] = "CollisionTile", // Command by AdAstra, small collision (tile)
+            [0x0349] = "MultiplyVar", // Command by Kuha, multiplies variables
+            [0x034A] = "CreateOW", // 
         };
         public static Dictionary<ushort, byte[]> DPPtScrCmdParameters = new Dictionary<ushort, byte[]>() {
             [0x0000] = new byte[1] { 0 },
@@ -885,7 +912,7 @@ namespace DSPRE.Resources {
             [0x00C7] = new byte[] { 2 },
             [0x00C8] = new byte[] { 1 },
             [0x00C9] = new byte[] { 1 },
-            [0x00CA] = new byte[1] { 0 },
+            [0x00CA] = new byte[] { 2 },
             [0x00CB] = new byte[] { 2 },
             [0x00CC] = new byte[1] { 0 },
             [0x00CD] = new byte[] { 1 },
@@ -1126,8 +1153,8 @@ namespace DSPRE.Resources {
             [0x01B8] = new byte[] { 2, 2 },
             [0x01B9] = new byte[] { 2, 2 },
             [0x01BA] = new byte[] { 2, 2 },
-            [0x01BB] = new byte[1] { 0 },
-            [0x01BC] = new byte[] { 2, 2 },
+            [0x01BB] = new byte[] { 2, 2 },
+            [0x01BC] = new byte[] { 2, 2, 2, 2 },
             [0x01BD] = new byte[] { 2 },
             [0x01BE] = new byte[] { 2 },
             [0x01BF] = new byte[] { 2 },
@@ -1398,7 +1425,7 @@ namespace DSPRE.Resources {
             [0x029E] = new byte[] { 2, 2 },
             [0x029F] = new byte[] { 2 },
             [0x02A0] = new byte[] { 2, 2, 2 },
-            [0x02A1] = new byte[1] { 0 },
+            [0x02A1] = new byte[] { 2, 2, 2 },
             [0x02A2] = new byte[] { 2 },
             [0x02A3] = new byte[] { 2 },
             [0x02A4] = new byte[] { 2 },
@@ -1433,6 +1460,12 @@ namespace DSPRE.Resources {
             [0x02C1] = new byte[1] { 0 },
             [0x02C2] = new byte[1] { 0 },
             [0x02C3] = new byte[1] { 1 },
+            [0x0360] = new byte[] { 2, 2, 2, 2, 1, 2, 2 }, // big collision?
+            [0x035D] = new byte[] { 2, 2, 2, 2, 2, 2, 2, 2 }, // spawn bld
+            [0x035E] = new byte[] { 2 }, // despawn bld
+            [0x035F] = new byte[] { 2, 2, 1, 2, 2 }, // small collision? ,
+            [0x0349] = new byte[] { 2, 2 }, // multiply var
+            [0x034A] = new byte[] { 2, 2, 2, 2, 2, 2 } // createOW
         };
 
         public static Dictionary<ushort, string> DPScrCmdNames = new Dictionary<ushort, string>() {
@@ -1475,6 +1508,9 @@ namespace DSPRE.Resources {
 
             [0x02CD] = "SetDarkFog",
             [0x02CE] = "ClearDarkFog",
+
+            [0x02E2] = "ScratchOffScreen",
+            [0x02E3] = "ReleaseScriptApp",
 
             [0x02E5] = "CheckLearnableTutorMoves",
             [0x02E6] = "ShowTutorMovesList",
@@ -1645,11 +1681,11 @@ namespace DSPRE.Resources {
             [0x0336] = new byte[] { 2 },
 
             //International release exclusive
-            [0x0337] = new byte[1] { 0 },
+            [0x0337] = new byte[] { 2, 2 },
             [0x0338] = new byte[1] { 0 },
             [0x0339] = new byte[1] { 0 },
             [0x033A] = new byte[] { 1 },
-            [0x033B] = new byte[1] { 0 },
+            [0x033B] = new byte[] { 1 },
             [0x033C] = new byte[] { 1, 2 },
             [0x033D] = new byte[] { 1, 2 },
             [0x033E] = new byte[] { 1, 2 },
@@ -1751,7 +1787,7 @@ namespace DSPRE.Resources {
             [0x0053] = "SetMusic",
             [0x0054] = "FadeOutMusic",
             [0x0055] = "FadeInMusic",
-
+            [0x0056] = "SetMusicPauseStatus",
             [0x0059] = "CheckChatotCry",
             [0x005A] = "StartChatotCry",
             [0x005B] = "StopChatotCry",
@@ -1804,7 +1840,7 @@ namespace DSPRE.Resources {
             [0x008D] = "CheckMoveInParty",
 
             [0x008F] = "ChooseRivalName",
-
+            [0x0090] = "GetCounterpartSprite",
             [0x0091] = "UpgradePokegear",
             [0x0092] = "RecordPokegearNumber", //to be confirmed
 
@@ -1839,6 +1875,7 @@ namespace DSPRE.Resources {
             [0x00C0] = "TextCounterpart",
             [0x00C1] = "TextPartyPokemon",
             [0x00C2] = "TextItem",
+            [0x00C2] = "TextPocket",
             [0x00C4] = "TextAttackItem",
             [0x00C5] = "TextMove",
             [0x00C6] = "TextNumber",
@@ -1966,7 +2003,7 @@ namespace DSPRE.Resources {
             [0x017E] = "GetPokemonHappiness",
             [0x017F] = "AddHappiness",
             [0x0180] = "SubHappiness",
-
+            [0x0181] = "TextDaycareMonData",
             [0x0182] = "GetPlayerDirection",
 
             [0x0185] = "CheckBornPokemonInParty",
@@ -1993,6 +2030,8 @@ namespace DSPRE.Resources {
             [0x01B1] = "CheckFossil",
             [0x01B2] = "CountPokemonUnderLevel",
             [0x01B3] = "SurvivePoison",
+            [0x01B4] = "FinishOverworldScreen",
+            [0x01B5] = "DummyGetVar",
 
             [0x01BD] = "GetPreviousHeaderID",
             [0x01BE] = "GetCurrentHeaderID",
@@ -2091,6 +2130,9 @@ namespace DSPRE.Resources {
 
             [0x026E] = "GetOWDirection",
 
+            [0x0289] = "ScratchOffScreen",
+            [0x028A] = "ReleaseScriptApp",
+
             [0x0290] = "CheckHeadbuttCompatibility",
 
             [0x02AB] = "GetBattleOutcome",
@@ -2124,6 +2166,8 @@ namespace DSPRE.Resources {
             [0x02EE] = "MultiTouchLocalText",
             [0x02EF] = "CreateMultiTouchBox",
             [0x02F0] = "CloseMultiTouch",
+
+            [0x0310] = "OverlayManager",
 
             [0x031B] = "ShowMomMoney",
             [0x031C] = "HideMomMoney",
@@ -2526,8 +2570,8 @@ namespace DSPRE.Resources {
             [0x017D] = new byte[] { 2, 2 },
             [0x017E] = new byte[] { 2, 2 },
             [0x017F] = new byte[] { 2, 2 },
-            [0x0180] = new byte[] { 1 },
-            [0x0181] = new byte[] { 2, 2 },
+            [0x0180] = new byte[] { 2, 2 },
+            [0x0181] = new byte[] { 2, 2, 2, 2 },
             [0x0182] = new byte[] { 2 },
             [0x0183] = new byte[] { 2 },
             [0x0184] = new byte[] { 2 },
@@ -2827,7 +2871,7 @@ namespace DSPRE.Resources {
             [0x0287] = new byte[] { 2, 2 }, //To be checked!
             [0x0288] = new byte[] { 2 },
             [0x0289] = new byte[1] { 0 },
-            [0x028A] = new byte[] { 2 },
+            [0x028A] = new byte[1] { 0 },
             [0x028B] = new byte[] { 2, 2, 2 },
             [0x028C] = new byte[] { 2, 2, 2 },
             [0x028D] = new byte[] { 2, 2, 2, 2 },
@@ -2957,11 +3001,11 @@ namespace DSPRE.Resources {
             [0x0309] = new byte[] { 2, 2 },
             [0x030A] = new byte[1] { 0 },
             [0x030B] = new byte[] { 2, 2 },
-            [0x030C] = new byte[] { 2 },
+            [0x030C] = new byte[] { 1, 1 },
             [0x030D] = new byte[] { 2 },
             [0x030E] = new byte[1] { 0 },
             [0x030F] = new byte[] { 1 },
-            [0x0310] = new byte[] { 2 },
+            [0x0310] = new byte[] { 1, 1 },
             [0x0311] = new byte[] { 2, 1 },
             [0x0312] = new byte[] { 1 },
             [0x0313] = new byte[] { 2, 2, 2 },
