@@ -4775,7 +4775,7 @@ namespace DSPRE {
 
         private void importMapButton_Click(object sender, EventArgs e) {
             OpenFileDialog im = new OpenFileDialog {
-                Filter = "NSBTX File (*.nsbtx)|*.nsbtx",
+                Filter = "NSBMD File (*.nsbmd)|*.nsbmd",
                 InitialDirectory = Properties.Settings.Default.mapImportStarterPoint
             };
             if (im.ShowDialog(this) != DialogResult.OK) {
