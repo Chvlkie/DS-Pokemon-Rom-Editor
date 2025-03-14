@@ -202,6 +202,14 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Filesystem.cs" />
+    <Compile Include="FlyEditor\Data\FlyTableRowDpPlat.cs" />
+    <Compile Include="FlyEditor\Data\FlyTableRowHgss.cs" />
+    <Compile Include="FlyEditor\FlyEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FlyEditor\FlyEditor.Designer.cs">
+      <DependentUpon>FlyEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GameCamera.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="InputComboBox.cs">
@@ -439,6 +447,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\EvolutionsEditor.resx">
       <DependentUpon>EvolutionsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FlyEditor\FlyEditor.resx">
+      <DependentUpon>FlyEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HeaderSearch.resx">
       <DependentUpon>HeaderSearch.cs</DependentUpon>

@@ -10040,5 +10040,10 @@ namespace DSPRE {
         {
             MessageBox.Show("Not implemented yet");
         }
+
+        private void flyWarpEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
