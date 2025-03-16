@@ -20,7 +20,7 @@ namespace DSPRE
     {
         public static string folderSuffix = "_DSPRE_contents";
         private const string dataFolderName = @"data";
-
+        public static bool IsHgEngine => File.Exists(OverlayUtils.GetPath(129));
         public static string romID { get; private set; }
         public static string fileName { get; private set; }
         public static string workDir { get; private set; }
@@ -39,6 +39,7 @@ namespace DSPRE
         public static GameFamilies gameFamily { get; private set; }
 
         public static uint synthOverlayLoadAddress = 0x023C8000;
+        public static uint hgEngineOverlayLoadAddress = 0x023D8000;
         public static uint arm9spawnOffset { get; private set; }
 
         public static int initialMoneyOverlayNumber { get; private set; }
