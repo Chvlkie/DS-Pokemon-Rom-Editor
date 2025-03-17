@@ -1,4 +1,5 @@
-﻿using DSPRE.Resources;
+﻿using DSPRE.Editors;
+using DSPRE.Resources;
 using DSPRE.ROMFiles;
 using Ekona.Images;
 using Images;
@@ -12462,6 +12463,12 @@ namespace DSPRE
 
             Helpers.statusLabelMessage();
             Update();
+        }
+
+        private void flyWarpEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var flyEditor = new FlyEditor(gameFamily, headerListBoxNames);
+            flyEditor.Show();
         }
     }
 }
